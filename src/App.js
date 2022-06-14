@@ -53,10 +53,13 @@ function App() {
     setMemo(result)
     setProd(product)
     setCompliance(complianceScore)
+
+    //send result variable to sol backend here
+    
   }
   return (
     <div className='wrapper'>
-      <Heading textAlign={'center'}>Welcome</Heading>
+      <Heading textAlign={'center'}>Solana Compliance Score</Heading>
       <Box>
         {
           headers.map((value, index) => (
@@ -79,14 +82,14 @@ function App() {
         <Button 
           variant={'solid'} 
           colorScheme={'green'} 
-          margin={'35px auto'} 
-          // float={'right'}
+          margin={'35px auto'}
           onClick={onSubmit}
         >
           Calculate Compliance Score
         </Button>
       </Box>
       
+      {/* Can Delete This Part */}
       <Box>
         <Text>Product: {prod}</Text>
         <Text>Compliance: {compliance}</Text>

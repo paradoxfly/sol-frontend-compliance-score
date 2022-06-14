@@ -1,25 +1,101 @@
-import logo from './logo.svg';
+import { Box, Heading, FormControl, FormLabel, Select, Button, Text } from '@chakra-ui/react';
+import { useState } from 'react';
 import './App.css';
 
+const initialValues = {
+  equity: 0,
+  decentralization: 0,
+  participation: 0,
+  investment: 0,
+  utility: 0,
+  purpose: 0,
+  control: 0,
+  derivatives: 0,
+  'common enterprise': 0,
+}
+
+const mydict = [
+  'Good',
+  'Acceptable',
+  'Outstanding',
+  'Marginal'
+]
+
+const headers = Object.keys(initialValues)
+
 function App() {
+
+  const [ dto, setDto ] = useState(initialValues);
+  const [ prod, setProd ] = useState(undefined)
+  const [ compliance, setCompliance ] = useState(undefined)
+  const [ memo, setMemo ] = useState(undefined)
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setDto(() => ({
+        ...dto,
+        [name]: parseInt(value) ,
+    }));
+  };
+
+  const onSubmit = () => {
+    let product = 1
+    for(let element of headers){
+      product *= dto[element]
+    }
+    console.log('product', product)
+    const complianceScore = Math.pow((1/9), product)
+    console.log('Compliance Score', complianceScore)
+
+    let result =  null
+    if(complianceScore < 0.5 ) result = 0 
+    else if(complianceScore >= 0.5 ) result = 1
+    setMemo(result)
+    setProd(product)
+    setCompliance(complianceScore)
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div className='wrapper'>
+      <Heading textAlign={'center'}>Welcome</Heading>
+      <Box>
+        {
+          headers.map((value, index) => (
+            <FormControl isRequired marginTop={'20px'} padding={'4px'} key={index}>
+              <FormLabel textTransform={'capitalize'} htmlFor={value}>{value}</FormLabel>
+              <Select
+                name={value}
+                id={value}
+                value={dto[value]}
+                onChange={onChange}>
+                {
+                  mydict.map((type, index) => (
+                    <option  key={index} value={index}>{type}</option>
+                  ))
+                }
+              </Select>
+            </FormControl>
+          ))
+        }
+        <Button 
+          variant={'solid'} 
+          colorScheme={'green'} 
+          margin={'35px auto'} 
+          // float={'right'}
+          onClick={onSubmit}
         >
-          Learn React
-        </a>
-      </header>
+          Calculate Compliance Score
+        </Button>
+      </Box>
+      
+      <Box>
+        <Text>Product: {prod}</Text>
+        <Text>Compliance: {compliance}</Text>
+        <Text>Memo: {memo}</Text>
+      </Box>
     </div>
   );
+
+  
 }
 
 export default App;
